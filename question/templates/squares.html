@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+{% block content%}
+    <canvas id="myCanvas" width="500" height="600"></canvas>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+      var X = {{ my_int }};
+      var cursor = [20, 20];
+      var rectsize = 20;
+      var padding = 5;
+
+      function drawRectangle(color){
+        context.beginPath();
+        context.rect(cursor[0], cursor[1], rectsize, rectsize);
+        cursor[0] = cursor[0] + rectsize + padding;
+        context.fillStyle = color;
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = 'black';
+        context.stroke();
+       }
+
+       var numsquares = 1;
+
+       for (var j=1; j<=10; j++){
+           for (var i=1; i<=10; i++){
+                if (numsquares % X == 0){
+                    drawRectangle('red');
+                 }
+                else {
+                    drawRectangle('grey');
+                }
+            numsquares++;
+            }
+            cursor[0] = 20;
+            cursor[1] = cursor[1] + rectsize + padding;
+        }
+    </script>
+{% endblock %}
