@@ -1,24 +1,27 @@
-from django.shortcuts import render
-from django.template import loader, Context, RequestContext
-from django.http import HttpResponse, HttpRequest
+from django.template import loader, RequestContext
+from django.http import HttpResponse, HttpResponseBadRequest
 
 
 def main(request):
     if request.method == 'GET':
-        return show_form(request)
+        template = loader.get_template('form.html')
+
+        # The form need the csrf token, so must use RequestContext
+        context = RequestContext(request, {})
+
+        # Render and return
+        return HttpResponse(template.render(context))
+
     elif request.method == 'POST':
-        return show_result(request)
+        # request value returns a string.
+        my_int = int(request.POST['num'])
 
-
-def show_form(request):
-    template = loader.get_template('form.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
-
-
-def show_result(request):
-    my_int = request.POST['num']
-    # mystring = "You requested %s" % my_int
-    template = loader.get_template('squares.html')
-    context = RequestContext(request, {'my_int': my_int })
-    return HttpResponse(template.render(context))
+        # Check for valid number
+        if my_int > 0 and my_int <= 100:
+            template = loader.get_template('squares.html')
+            context = RequestContext(request, {'my_int': my_int})
+            return HttpResponse(template.render(context))
+        else:
+            return HttpResponseBadRequest("The number you entered, %s,\
+                                          was not between 1 and 100."
+                                          % my_int)

@@ -1,11 +1,12 @@
 {% extends 'base.html'%}
 {% block content%}
-    <canvas id="myCanvas" width="500" height="600"></canvas>
+    <canvas id="myCanvas" width="300" height="300"></canvas>
     <script>
       var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
-      var X = {{ my_int }};
-      var cursor = [20, 20];
+      var context = canvas.getContext('2d'); // Gets a 2D canvas
+      var X = {{ my_int }};  // to be replaced by view
+      var cursor_start = [20, 20];
+      var cursor = cursor_start.slice(0); // clone array into cursor
       var rectsize = 20;
       var padding = 5;
 
@@ -22,6 +23,8 @@
 
        var numsquares = 1;
 
+       // 10 rows of 10 columns, starting at 1
+       // to be analogous to the numsquares var.
        for (var j=1; j<=10; j++){
            for (var i=1; i<=10; i++){
                 if (numsquares % X == 0){
@@ -32,7 +35,8 @@
                 }
             numsquares++;
             }
-            cursor[0] = 20;
+            // Reset cursor to begining of line, add y to move down.
+            cursor[0] = cursor_start[0];
             cursor[1] = cursor[1] + rectsize + padding;
         }
     </script>
